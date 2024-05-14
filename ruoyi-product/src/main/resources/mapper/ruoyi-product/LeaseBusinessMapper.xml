@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mapper.LeaseBusinessMapper">
+
+    <resultMap type="com.ruoyi.domain.LeaseBusiness" id="LeaseBusinessResult">
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="isdeleted"    column="isdeleted"    />
+        <result property="applicableProduct"    column="applicable_product"    />
+        <result property="businessId"    column="business_id"    />
+        <result property="leaseName"    column="lease_name"    />
+        <result property="shopName"    column="shop_name"    />
+    </resultMap>
+
+    <sql id="selectLeaseBusinessVo">
+        select created_by, created_time, updated_by, updated_time, isdeleted, applicable_product, business_id, lease_name, shop_name from lease_business
+    </sql>
+
+    <select id="selectLeaseBusinessList" parameterType="com.ruoyi.domain.LeaseBusiness" resultMap="LeaseBusinessResult">
+        <include refid="selectLeaseBusinessVo"/>
+        <where>
+            <if test="applicableProduct != null  and applicableProduct != ''"> and applicable_product = #{applicableProduct}</if>
+            <if test="leaseName != null  and leaseName != ''"> and lease_name like concat('%', #{leaseName}, '%')</if>
+            <if test="shopName != null  and shopName != ''"> and shop_name like concat('%', #{shopName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectLeaseBusinessByApplicableProduct" parameterType="String" resultMap="LeaseBusinessResult">
+        <include refid="selectLeaseBusinessVo"/>
+        where applicable_product = #{applicableProduct}
+    </select>
+
+    <insert id="insertLeaseBusiness" parameterType="com.ruoyi.domain.LeaseBusiness">
+        INSERT INTO lease_business (applicable_product,lease_name,business_id,shop_name)
+        SELECT lp.lease_id, lp.lease_name, bi.business_id, bi.shop_name
+        FROM lease_product lp
+                 JOIN business_info bi ON lp.lease_name = #{leaseName} AND bi.shop_name = #{shopName};
+    </insert>
+
+    <update id="updateLeaseBusiness" parameterType="com.ruoyi.domain.LeaseBusiness">
+        update lease_business
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createdBy != null">created_by = #{createdBy},</if>
+            <if test="createdTime != null">created_time = #{createdTime},</if>
+            <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null">updated_time = #{updatedTime},</if>
+            <if test="isdeleted != null">isdeleted = #{isdeleted},</if>
+            <if test="businessId != null">business_id = #{businessId},</if>
+            <if test="leaseName != null">lease_name = #{leaseName},</if>
+            <if test="shopName != null">shop_name = #{shopName},</if>
+        </trim>
+        where applicable_product = #{applicableProduct}
+    </update>
+
+    <delete id="deleteLeaseBusinessByApplicableProduct" parameterType="com.ruoyi.domain.LeaseBusiness">
+        delete from lease_business where applicable_product = #{applicableProduct} and business_id = #{businessId}
+    </delete>
+
+</mapper>

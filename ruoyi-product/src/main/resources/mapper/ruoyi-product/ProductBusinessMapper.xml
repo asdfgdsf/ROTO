@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mapper.ProductBusinessMapper">
+
+    <resultMap type="com.ruoyi.domain.ProductBusiness" id="ProductBusinessResult">
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="isdeleted"    column="isdeleted"    />
+        <result property="applicableProduct"    column="applicable_product"    />
+        <result property="businessId"    column="business_id"    />
+        <result property="productName"    column="product_name"    />
+        <result property="shopName"    column="shop_name"    />
+    </resultMap>
+
+    <sql id="selectProductBusinessVo">
+        select created_by, created_time, updated_by, updated_time, isdeleted, applicable_product, business_id, product_name, shop_name from product_business
+    </sql>
+
+    <select id="selectProductBusinessList" parameterType="com.ruoyi.domain.ProductBusiness" resultMap="ProductBusinessResult">
+        <include refid="selectProductBusinessVo"/>
+        <where>
+            <if test="applicableProduct != null  and applicableProduct != ''"> and applicable_product = #{applicableProduct}</if>
+            <if test="businessId != null  and businessId != ''"> and business_id = #{businessId}</if>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="shopName != null  and shopName != ''"> and shop_name like concat('%', #{shopName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectProductBusinessByApplicableProduct" parameterType="String" resultMap="ProductBusinessResult">
+        <include refid="selectProductBusinessVo"/>
+        where applicable_product = #{applicableProduct}
+    </select>
+
+    <insert id="insertProductBusiness" parameterType="com.ruoyi.domain.ProductBusiness">
+        INSERT INTO product_business (applicable_product,product_name,business_id,shop_name)
+        SELECT sp.shot_id, sp.product_name, bi.business_id, bi.shop_name
+        FROM shot_product sp
+                 JOIN business_info bi ON sp.product_name = #{productName} AND bi.shop_name = #{shopName};
+    </insert>
+
+    <update id="updateProductBusiness" parameterType="com.ruoyi.domain.ProductBusiness">
+        update product_business
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createdBy != null">created_by = #{createdBy},</if>
+            <if test="createdTime != null">created_time = #{createdTime},</if>
+            <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null">updated_time = #{updatedTime},</if>
+            <if test="isdeleted != null">isdeleted = #{isdeleted},</if>
+            <if test="businessId != null">business_id = #{businessId},</if>
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="shopName != null">shop_name = #{shopName},</if>
+        </trim>
+        where applicable_product = #{applicableProduct}
+    </update>
+
+    <delete id="deleteProductBusinessByApplicableProduct" parameterType="com.ruoyi.domain.ProductBusiness">
+        delete from product_business where applicable_product = #{applicableProduct} and business_id = #{businessId}
+    </delete>
+
+    <delete id="deleteProductBusinessByApplicableProducts" parameterType="com.ruoyi.domain.ProductBusiness">
+        delete from product_business
+        where applicable_product in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+            #{item.applicableProduct}
+        </foreach>
+        and business_id in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+            #{item.businessId}
+        </foreach>
+
+    </delete>
+</mapper>

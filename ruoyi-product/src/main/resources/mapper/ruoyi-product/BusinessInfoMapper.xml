@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mapper.BusinessInfoMapper">
+
+    <resultMap type="com.ruoyi.domain.BusinessInfo" id="BusinessInfoResult">
+        <result property="businessId"    column="business_id"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="businessName"    column="business_name"    />
+        <result property="legalNum"    column="legal_num"    />
+        <result property="license"    column="license"    />
+        <result property="businessPhone"    column="business_phone"    />
+        <result property="businessAddress"    column="business_address"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="isdeleted"    column="isdeleted"    />
+        <result property="relationId"    column="relation_id"    />
+        <result property="approveStatus"    column="approve_status"    />
+        <result property="approveTime"    column="approve_time"    />
+    </resultMap>
+
+    <sql id="selectBusinessInfoVo">
+        select business_id, shop_name, business_name, legal_num, license, business_phone, business_address, created_by, created_time, updated_by, updated_time, isdeleted, relation_id, approve_status, approve_time from business_info
+    </sql>
+
+    <select id="selectBusinessInfoList" parameterType="com.ruoyi.domain.BusinessInfo" resultMap="BusinessInfoResult">
+        <include refid="selectBusinessInfoVo"/>
+        <where>
+            <if test="businessId != null  and businessId != ''"> and business_id = #{businessId}</if>
+            <if test="shopName != null  and shopName != ''"> and shop_name like concat('%', #{shopName}, '%')</if>
+            <if test="businessName != null  and businessName != ''"> and business_name like concat('%', #{businessName}, '%')</if>
+            <if test="legalNum != null  and legalNum != ''"> and legal_num = #{legalNum}</if>
+            <if test="license != null  and license != ''"> and license = #{license}</if>
+            <if test="businessPhone != null  and businessPhone != ''"> and business_phone = #{businessPhone}</if>
+            <if test="businessAddress != null  and businessAddress != ''"> and business_address = #{businessAddress}</if>
+        </where>
+    </select>
+
+    <select id="selectBusinessInfoByBusinessId" parameterType="String" resultMap="BusinessInfoResult">
+        <include refid="selectBusinessInfoVo"/>
+        where business_id = #{businessId}
+    </select>
+
+    <insert id="insertBusinessInfo" parameterType="com.ruoyi.domain.BusinessInfo" useGeneratedKeys="true" keyProperty="businessId">
+        insert into business_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopName != null">shop_name,</if>
+            <if test="businessName != null">business_name,</if>
+            <if test="legalNum != null">legal_num,</if>
+            <if test="license != null">license,</if>
+            <if test="businessPhone != null">business_phone,</if>
+            <if test="businessAddress != null">business_address,</if>
+            <if test="createdBy != null">created_by,</if>
+            <if test="createdTime != null">created_time,</if>
+            <if test="updatedBy != null">updated_by,</if>
+            <if test="updatedTime != null">updated_time,</if>
+            <if test="isdeleted != null">isdeleted,</if>
+            <if test="relationId != null">relation_id,</if>
+            <if test="approveStatus != null">approve_status,</if>
+            <if test="approveTime != null">approve_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopName != null">#{shopName},</if>
+            <if test="businessName != null">#{businessName},</if>
+            <if test="legalNum != null">#{legalNum},</if>
+            <if test="license != null">#{license},</if>
+            <if test="businessPhone != null">#{businessPhone},</if>
+            <if test="businessAddress != null">#{businessAddress},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+            <if test="isdeleted != null">#{isdeleted},</if>
+            <if test="relationId != null">#{relationId},</if>
+            <if test="approveStatus != null">#{approveStatus},</if>
+            <if test="approveTime != null">#{approveTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBusinessInfo" parameterType="com.ruoyi.domain.BusinessInfo">
+        update business_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopName != null">shop_name = #{shopName},</if>
+            <if test="businessName != null">business_name = #{businessName},</if>
+            <if test="legalNum != null">legal_num = #{legalNum},</if>
+            <if test="license != null">license = #{license},</if>
+            <if test="businessPhone != null">business_phone = #{businessPhone},</if>
+            <if test="businessAddress != null">business_address = #{businessAddress},</if>
+            <if test="createdBy != null">created_by = #{createdBy},</if>
+            <if test="createdTime != null">created_time = #{createdTime},</if>
+            <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null">updated_time = #{updatedTime},</if>
+            <if test="isdeleted != null">isdeleted = #{isdeleted},</if>
+            <if test="relationId != null">relation_id = #{relationId},</if>
+            <if test="approveStatus != null">approve_status = #{approveStatus},</if>
+            <if test="approveTime != null">approve_time = #{approveTime},</if>
+        </trim>
+        where business_id = #{businessId}
+    </update>
+
+    <delete id="deleteBusinessInfoByBusinessId" parameterType="String">
+        delete from business_info where business_id = #{businessId}
+    </delete>
+
+    <delete id="deleteBusinessInfoByBusinessIds" parameterType="String">
+        delete from business_info where business_id in
+        <foreach item="businessId" collection="array" open="(" separator="," close=")">
+            #{businessId}
+        </foreach>
+    </delete>
+</mapper>

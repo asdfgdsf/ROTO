@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mapper.ShotGoodsMapper">
+
+    <resultMap type="com.ruoyi.domain.ShotGoods" id="ShotGoodsResult">
+        <result property="shotId"    column="shot_id"    />
+        <result property="productName"    column="product_name"    />
+        <result property="scenic"    column="scenic"    />
+        <result property="attraction"    column="attraction"    />
+        <result property="publishStatus"    column="publish_status"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="isdeleted"    column="isdeleted"    />
+        <result property="photoUrl"    column="photo_url"    />
+        <result property="publishTime"    column="publish_time"    />
+    </resultMap>
+
+    <sql id="selectShotGoodsVo">
+        select shot_id, product_name, scenic, attraction, publish_status, created_by, created_time, updated_by, updated_time, isdeleted, photo_url, publish_time from shot_product
+    </sql>
+
+    <select id="selectShotGoodsList" parameterType="com.ruoyi.domain.ShotGoods" resultMap="ShotGoodsResult">
+        <include refid="selectShotGoodsVo"/>
+        <where>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="scenic != null  and scenic != ''"> and scenic = #{scenic}</if>
+            <if test="attraction != null  and attraction != ''"> and attraction = #{attraction}</if>
+            <if test="publishTime != null "> and publish_time = #{publishTime}</if>
+        </where>
+    </select>
+
+    <select id="selectShotGoodsByShotId" parameterType="String" resultMap="ShotGoodsResult">
+        <include refid="selectShotGoodsVo"/>
+        where shot_id = #{shotId}
+    </select>
+
+    <insert id="insertShotGoods" parameterType="com.ruoyi.domain.ShotGoods" useGeneratedKeys="true" keyProperty="shotId">
+        insert into shot_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productName != null">product_name,</if>
+            <if test="scenic != null">scenic,</if>
+            <if test="attraction != null">attraction,</if>
+            <if test="publishStatus != null">publish_status,</if>
+            <if test="createdBy != null">created_by,</if>
+            <if test="createdTime != null">created_time,</if>
+            <if test="updatedBy != null">updated_by,</if>
+            <if test="updatedTime != null">updated_time,</if>
+            <if test="isdeleted != null">isdeleted,</if>
+            <if test="photoUrl != null">photo_url,</if>
+            <if test="publishTime != null">publish_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productName != null">#{productName},</if>
+            <if test="scenic != null">#{scenic},</if>
+            <if test="attraction != null">#{attraction},</if>
+            <if test="publishStatus != null">#{publishStatus},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+            <if test="isdeleted != null">#{isdeleted},</if>
+            <if test="photoUrl != null">#{photoUrl},</if>
+            <if test="publishTime != null">#{publishTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateShotGoods" parameterType="com.ruoyi.domain.ShotGoods">
+        update shot_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="scenic != null">scenic = #{scenic},</if>
+            <if test="attraction != null">attraction = #{attraction},</if>
+            <if test="publishStatus != null">publish_status = #{publishStatus},</if>
+            <if test="createdBy != null">created_by = #{createdBy},</if>
+            <if test="createdTime != null">created_time = #{createdTime},</if>
+            <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null">updated_time = #{updatedTime},</if>
+            <if test="isdeleted != null">isdeleted = #{isdeleted},</if>
+            <if test="photoUrl != null">photo_url = #{photoUrl},</if>
+            <if test="publishTime != null">publish_time = #{publishTime},</if>
+        </trim>
+        where shot_id = #{shotId}
+    </update>
+
+    <delete id="deleteShotGoodsByShotId" parameterType="String">
+        delete from shot_product where shot_id = #{shotId}
+    </delete>
+
+    <delete id="deleteShotGoodsByShotIds" parameterType="String">
+        delete from shot_product where shot_id in
+        <foreach item="shotId" collection="array" open="(" separator="," close=")">
+            #{shotId}
+        </foreach>
+    </delete>
+</mapper>

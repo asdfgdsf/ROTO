@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mapper.ShotOrderMapper">
+
+    <resultMap type="com.ruoyi.domain.ShotOrder" id="ShotOrderResult">
+        <result property="shotOrderId"    column="shot_order_id"    />
+        <result property="productName"    column="product_name"    />
+        <result property="pack"    column="package"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userPhone"    column="user_phone"    />
+        <result property="price"    column="price"    />
+        <result property="shotDate"    column="shot_date"    />
+        <result property="placeDate"    column="place_date"    />
+        <result property="payStatus"    column="pay_status"    />
+        <result property="orderstatus"    column="orderstatus"    />
+        <result property="businessId"    column="business_id"    />
+        <result property="photographerId"    column="photographer_id"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="isdeleted"    column="isdeleted"    />
+        <result property="pay"    column="pay"    />
+        <result property="shotId"    column="shot_id"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="photoUrl"    column="photo_url"    />
+    </resultMap>
+
+    <sql id="selectShotOrderVo">
+        select shot_order_id, product_name, package, user_name, user_phone, price, shot_date, place_date, pay_status, orderstatus, business_id, photographer_id, created_by, created_time, updated_by, updated_time, isdeleted, pay, shot_id, shop_name,photo_url from shot_order
+    </sql>
+
+    <select id="selectShotOrderList" parameterType="com.ruoyi.domain.ShotOrder" resultMap="ShotOrderResult">
+        <include refid="selectShotOrderVo"/>
+        <where>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="pack != null  and pack != ''"> and package = #{pack}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="shotDate != null "> and shot_date = #{shotDate}</if>
+            <if test="placeDate != null "> and place_date = #{placeDate}</if>
+            <if test="payStatus != null  and payStatus != ''"> and pay_status = #{payStatus}</if>
+            <if test="orderstatus != null  and orderstatus != ''"> and orderstatus = #{orderstatus}</if>
+            <if test="businessId != null  and businessId != ''"> and business_id = #{businessId}</if>
+            <if test="shotId != null "> and shot_id = #{shotId}</if>
+            <if test="shopName != null  and shopName != ''"> and shop_name like concat('%', #{shopName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectShotOrderByShotOrderId" parameterType="String" resultMap="ShotOrderResult">
+        <include refid="selectShotOrderVo"/>
+        where shot_order_id = #{shotOrderId}
+    </select>
+
+    <insert id="insertShotOrder" parameterType="com.ruoyi.domain.ShotOrder" useGeneratedKeys="true" keyProperty="shotOrderId">
+        insert into shot_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productName != null">product_name,</if>
+            <if test="pack != null">package,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="userPhone != null">user_phone,</if>
+            <if test="price != null">price,</if>
+            <if test="shotDate != null">shot_date,</if>
+            <if test="shotDate != null">place_date,</if>
+            <if test="payStatus != null">pay_status,</if>
+            <if test="orderstatus != null">orderstatus,</if>
+            <if test="businessId != null">business_id,</if>
+            <if test="photographerId != null">photographer_id,</if>
+            <if test="createdBy != null">created_by,</if>
+            <if test="createdTime != null">created_time,</if>
+            <if test="updatedBy != null">updated_by,</if>
+            <if test="updatedTime != null">updated_time,</if>
+            <if test="isdeleted != null">isdeleted,</if>
+            <if test="price != null">pay,</if>
+            <if test="shotId != null">shot_id,</if>
+            <if test="shopName != null">shop_name,</if>
+            <if test="photoUrl != null">photo_Url,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productName != null">#{productName},</if>
+            <if test="pack != null">#{pack},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="userPhone != null">#{userPhone},</if>
+            <if test="price != null">#{price},</if>
+            <if test="shotDate != null">#{shotDate},</if>
+            <if test="shotDate != null">#{shotDate},</if>
+            <if test="payStatus != null">#{payStatus},</if>
+            <if test="orderstatus != null">#{orderstatus},</if>
+            <if test="businessId != null">#{businessId},</if>
+            <if test="photographerId != null">#{photographerId},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+            <if test="isdeleted != null">#{isdeleted},</if>
+            <if test="price != null">#{price},</if>
+            <if test="shotId != null">#{shotId},</if>
+            <if test="shopName != null">#{shopName},</if>
+            <if test="photoUrl != null">#{photoUrl},</if>
+        </trim>
+    </insert>
+
+    <update id="updateShotOrder" parameterType="com.ruoyi.domain.ShotOrder">
+        update shot_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="pack != null">package = #{pack},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userPhone != null">user_phone = #{userPhone},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="shotDate != null">shot_date = #{shotDate},</if>
+            <if test="placeDate != null">place_date = #{placeDate},</if>
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="orderstatus != null">orderstatus = #{orderstatus},</if>
+            <if test="businessId != null">business_id = #{businessId},</if>
+            <if test="photographerId != null">photographer_id = #{photographerId},</if>
+            <if test="createdBy != null">created_by = #{createdBy},</if>
+            <if test="createdTime != null">created_time = #{createdTime},</if>
+            <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null">updated_time = #{updatedTime},</if>
+            <if test="isdeleted != null">isdeleted = #{isdeleted},</if>
+            <if test="pay != null">pay = #{pay},</if>
+            <if test="shotId != null">shot_id = #{shotId},</if>
+            <if test="shopName != null">shop_name = #{shopName},</if>
+        </trim>
+        where shot_order_id = #{shotOrderId}
+    </update>
+
+    <delete id="deleteShotOrderByShotOrderId" parameterType="String">
+        delete from shot_order where shot_order_id = #{shotOrderId}
+    </delete>
+
+    <delete id="deleteShotOrderByShotOrderIds" parameterType="String">
+        delete from shot_order where shot_order_id in
+        <foreach item="shotOrderId" collection="array" open="(" separator="," close=")">
+            #{shotOrderId}
+        </foreach>
+    </delete>
+</mapper>

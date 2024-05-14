@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mapper.LeaseStyleMapper">
+
+    <resultMap type="com.ruoyi.domain.LeaseStyle" id="LeaseStyleResult">
+        <result property="styleId"    column="style_id"    />
+        <result property="styleName"    column="style_name"    />
+        <result property="size"    column="size"    />
+        <result property="price"    column="price"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="isdeleted"    column="isdeleted"    />
+        <result property="applicableProduct"    column="applicable_product"    />
+    </resultMap>
+
+    <sql id="selectLeaseStyleVo">
+        select style_id, style_name, size, price, created_by, created_time, updated_by, updated_time, isdeleted, applicable_product from lease_style
+    </sql>
+
+    <select id="selectLeaseStyleList" parameterType="com.ruoyi.domain.LeaseStyle" resultMap="LeaseStyleResult">
+        <include refid="selectLeaseStyleVo"/>
+        <where>
+            <if test="styleId != null  and styleId != ''"> and style_id = #{styleId}</if>
+            <if test="applicableProduct != null  and applicableProduct != ''"> and applicable_product = #{applicableProduct}</if>
+            <if test="styleName != null  and styleName != ''"> and style_name like concat('%', #{styleName}, '%')</if>
+            <if test="size != null "> and size = #{size}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="applicableProduct != null  and applicableProduct != ''"> and applicable_product = #{applicableProduct}</if>
+        </where>
+    </select>
+
+    <select id="selectLeaseStyleByStyleId" parameterType="String" resultMap="LeaseStyleResult">
+        <include refid="selectLeaseStyleVo"/>
+        where style_id = #{styleId}
+    </select>
+
+    <insert id="insertLeaseStyle" parameterType="com.ruoyi.domain.LeaseStyle" useGeneratedKeys="true" keyProperty="styleId">
+        insert into lease_style
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="styleName != null">style_name,</if>
+            <if test="size != null">size,</if>
+            <if test="price != null">price,</if>
+            <if test="createdBy != null">created_by,</if>
+            <if test="createdTime != null">created_time,</if>
+            <if test="updatedBy != null">updated_by,</if>
+            <if test="updatedTime != null">updated_time,</if>
+            <if test="isdeleted != null">isdeleted,</if>
+            <if test="applicableProduct != null">applicable_product,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="styleName != null">#{styleName},</if>
+            <if test="size != null">#{size},</if>
+            <if test="price != null">#{price},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+            <if test="isdeleted != null">#{isdeleted},</if>
+            <if test="applicableProduct != null">#{applicableProduct},</if>
+        </trim>
+    </insert>
+
+    <update id="updateLeaseStyle" parameterType="com.ruoyi.domain.LeaseStyle">
+        update lease_style
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="styleName != null">style_name = #{styleName},</if>
+            <if test="size != null">size = #{size},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="createdBy != null">created_by = #{createdBy},</if>
+            <if test="createdTime != null">created_time = #{createdTime},</if>
+            <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+            <if test="updatedTime != null">updated_time = #{updatedTime},</if>
+            <if test="isdeleted != null">isdeleted = #{isdeleted},</if>
+            <if test="applicableProduct != null">applicable_product = #{applicableProduct},</if>
+        </trim>
+        where style_id = #{styleId}
+    </update>
+
+    <delete id="deleteLeaseStyleByStyleId" parameterType="String">
+        delete from lease_style where style_id = #{styleId}
+    </delete>
+
+    <delete id="deleteLeaseStyleByStyleIds" parameterType="String">
+        delete from lease_style where style_id in
+        <foreach item="styleId" collection="array" open="(" separator="," close=")">
+            #{styleId}
+        </foreach>
+    </delete>
+</mapper>
